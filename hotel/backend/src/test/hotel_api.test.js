@@ -84,7 +84,7 @@ describe("si inicialmente hay un hotel en la bd", () => {
       .send(updatedHotel)
       .expect(201);
 
-    expect(updResult.body.comment).toContain(updatedHotel.comment);
+    expect(updResult.body.comments[0].rating).toBe(4);
   });
 });
 
@@ -120,6 +120,6 @@ describe("filtrar hoteles", () => {
     await api.post(`${url}/${id3}/comment`).send(newComment3).expect(201);
 
     const res2 = await api.get(`${url}?rating=${4}`);
-    console.log(res2.body);
+    expect(res2.body[0].comments[0].rating).toBe(4);
   });
 });
