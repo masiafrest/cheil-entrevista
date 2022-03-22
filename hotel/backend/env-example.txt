@@ -1,0 +1,4 @@
+
+MONGODB_URI=mongodb+srv://masiafrest:<password>@cluster0.ibtvd.mongodb.net/blogList?retryWrites=true&w=majority
+TEST_MONGODB_URI=mongodb+srv://masiafrest:<password>@cluster0.ibtvd.mongodb.net/Test_blogList?retryWrites=true&w=majority
+PORT=3001

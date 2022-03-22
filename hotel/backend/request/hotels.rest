@@ -1,0 +1,8 @@
+@baseurl = http://localhost:3001/api
+
+###
+
+GET http://localhost:3001/api/hotel/
+Content-Type: application/json
+
+###
