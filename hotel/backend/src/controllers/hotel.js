@@ -5,12 +5,14 @@ const Comment = require("../models/Comment");
 hotelRouter.get("/", async (req, res, next) => {
   try {
     const { rating, category, priceOrderBy } = req.query;
-    console.log(req.query);
+    console.log(priceOrderBy);
     const filter = {};
     if (rating) filter["comments.rating"] = Number(req.query.rating);
     if (category) filter.category = category;
-    console.log(filter);
-    const hotels = await Hotel.find(filter).populate("comments");
+    const hotels = await Hotel.find(filter).sort({
+      price: priceOrderBy || "asc",
+    });
+    // .populate("comments");
     res.json(hotels);
   } catch (error) {
     next(error);
