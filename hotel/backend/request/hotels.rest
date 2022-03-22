@@ -2,7 +2,24 @@
 
 ###
 
-GET http://localhost:3001/api/hotel?categoria=5&calificacion=2&priceOrderBy=asc
+GET http://localhost:3001/api/hotel
 Content-Type: application/json
 
+###
+GET http://localhost:3001/api/hotel?rating=5
+Content-Type: application/json
+
+###
+###
+GET http://localhost:3001/api/hotel?category=1
+Content-Type: application/json
+###
+POST  http://localhost:3001/api/hotel/623a1cbf22edec7db199b984/comment?category=1
+Content-Type: application/json
+
+{
+	"rating": 5,
+	"comment": "desde rest client vscod",
+	"user": ""
+}
 ###

@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const config = require("../../utils/config");
 const logger = require("../../utils/logger");
 const { seedHotels } = require("./mock_data");
-console.log(seedHotels);
 
 mongoose
   .connect(config.MONGODB_URI)

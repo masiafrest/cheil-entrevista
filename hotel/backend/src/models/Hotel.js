@@ -12,8 +12,11 @@ const hotelSchema = new mongoose.Schema({
   images: [String],
   comments: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Comment",
+      rating: Number,
+      comment: String,
+      user: String,
+      // type: mongoose.Schema.Types.ObjectId,
+      // ref: "Comment",
     },
   ],
 });

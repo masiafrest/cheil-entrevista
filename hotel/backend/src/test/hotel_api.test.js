@@ -38,7 +38,7 @@ describe("si inicialmente hay un hotel en la bd", () => {
 
   test("creacion fallido con statusCode 400 y mensaje si el hotel name ya esta en uso", async () => {
     const hotelsAtStart = await hotelsInDb();
-    const hotel = { ...newHotel, name: "sherato" };
+    const hotel = { ...newHotel, name: seedHotels[0].name };
 
     await api
       .post(url)
@@ -88,7 +88,7 @@ describe("si inicialmente hay un hotel en la bd", () => {
   });
 });
 
-describe.only("filtrar hoteles", () => {
+describe("filtrar hoteles", () => {
   beforeEach(async () => {
     await Hotel.deleteMany({});
     await Hotel.insertMany(seedHotels);
@@ -105,7 +105,7 @@ describe.only("filtrar hoteles", () => {
     expect(res.body[0].category).toBe(category);
   });
 
-  test.only("por rating", async () => {
+  test("por rating", async () => {
     const hotels = await api.get(`${url}`);
     const id = hotels.body[0].id;
     const id2 = hotels.body[1].id;
