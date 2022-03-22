@@ -7,6 +7,7 @@ hotelRouter.get("/", async (req, res, next) => {
     const filter = {};
     if (rating) filter["comments.rating"] = Number(req.query.rating);
     if (category) filter.category = category;
+    console.log(req.query, filter);
     const hotels = await Hotel.find(filter)
       .sort({
         price: priceOrderBy || "asc",
