@@ -15,7 +15,7 @@ const unknownEndpoints = (req, res) => {
 const errorHandler = (error, req, res, next) => {
   console.log(error.name);
   console.log(error.message);
-  ogger.error("error: ", error.message);
+  logger.error("error: ", error.message);
   if (error.name === "CastError") {
     res.status(400).send({ error: "malformated id" });
   }

@@ -5,17 +5,12 @@ const url = "/api/hotel";
 
 const { hotelsInDb } = require("./test_helpers");
 const Hotel = require("../models/Hotel");
+const { seedHotels } = require("./seed/mock_data");
 
 describe("si inicialmente hay un hotel en la bd", () => {
   beforeEach(async () => {
     await Hotel.deleteMany({});
-    const hotel = new Hotel({
-      name: "sherato",
-      category: 1,
-      price: 10,
-      images: ["https://via.placeholder.com/150"],
-    });
-    await hotel.save();
+    await Hotel.insertMany(seedHotels);
   });
 
   const newHotel = {
@@ -90,5 +85,41 @@ describe("si inicialmente hay un hotel en la bd", () => {
       .expect(201);
 
     expect(updResult.body.comment).toContain(updatedHotel.comment);
+  });
+});
+
+describe.only("filtrar hoteles", () => {
+  beforeEach(async () => {
+    await Hotel.deleteMany({});
+    await Hotel.insertMany(seedHotels);
+  });
+
+  test("sin filtro", async () => {
+    const res = await api.get(url);
+    expect(res.body).toHaveLength(seedHotels.length);
+  });
+
+  test("por categoria", async () => {
+    const category = seedHotels[0].category;
+    const res = await api.get(`${url}?category=${category}`);
+    expect(res.body[0].category).toBe(category);
+  });
+
+  test.only("por rating", async () => {
+    const hotels = await api.get(`${url}`);
+    const id = hotels.body[0].id;
+    const id2 = hotels.body[1].id;
+    const id3 = hotels.body[2].id;
+
+    const newComment = { comment: "nuevo commentario", rating: 4 };
+    const newComment2 = { comment: "segundo comentario", rating: 3 };
+    const newComment3 = { comment: "tercero commentario", rating: 2 };
+
+    await api.post(`${url}/${id}/comment`).send(newComment).expect(201);
+    await api.post(`${url}/${id2}/comment`).send(newComment2).expect(201);
+    await api.post(`${url}/${id3}/comment`).send(newComment3).expect(201);
+
+    const res2 = await api.get(`${url}?rating=${4}`);
+    console.log(res2.body);
   });
 });
