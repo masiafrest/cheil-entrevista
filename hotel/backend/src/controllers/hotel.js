@@ -4,6 +4,7 @@ const Comment = require("../models/Comment");
 
 hotelRouter.get("/", async (req, res, next) => {
   try {
+    console.log(req.query);
     const hotels = await Hotel.find({}).populate("comments");
     res.json(hotels);
   } catch (error) {
