@@ -2,7 +2,6 @@ import axios from "axios";
 const baseUrl = "/api/hotel";
 
 const getAll = async (filter) => {
-  console.log(filter);
   const { category, rating, priceOrderBy } = filter;
   const params = {};
 
@@ -14,6 +13,12 @@ const getAll = async (filter) => {
   return res.data;
 };
 
+const postComment = async (id, commentObj) => {
+  const res = await axios.post(`${baseUrl}/${id}/comment`, { ...commentObj });
+  return res.data;
+};
+
 export default {
   getAll,
+  postComment,
 };

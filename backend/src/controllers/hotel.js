@@ -38,7 +38,7 @@ hotelRouter.post("/:id/comment", async (req, res, next) => {
     if (!hotel) {
       return res.status(404).json("hotel dont exist");
     }
-
+    console.log(req.body);
     const newComment = { ...req.body, user: req.body.user || "anonymous" };
     hotel.comments = hotel.comments.concat(newComment);
     await hotel.save();

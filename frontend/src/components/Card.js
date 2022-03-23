@@ -10,12 +10,18 @@ import {
   Avatar,
   IconButton,
   Typography,
+  Button,
+  TextField,
+  Box,
+  Rating,
 } from "@mui/material";
 import { red } from "@mui/material/colors";
 import {
   MoreVert as MoreVertIcon,
   ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material";
+
+import hotelService from "../services/hotel";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -28,37 +34,74 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
+const formatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
+
 export default function Card({ hotel }) {
   const [expanded, setExpanded] = React.useState(false);
+  const [isComment, setIsComment] = React.useState({
+    state: false,
+    comment: "",
+    user: "",
+    rating: null,
+  });
 
-  console.log(hotel);
   const hasComment = hotel?.comments.length > 0;
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
+  const handleAddComment = () => {
+    handleExpandClick();
+    setIsComment((prev) => ({ ...prev, state: true }));
+  };
+
+  const handleFormComments = (e) => {
+    setIsComment((prev) => ({
+      ...prev,
+      [e.target.id]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { comment, rating, user } = isComment;
+    hotelService.postComment(hotel.id, { comment, rating, user });
+    handleExpandClick();
+    setIsComment((prev) => ({ ...prev, state: false }));
+  };
   return (
-    <CardContainer sx={{ maxWidth: 345 }}>
+    <CardContainer sx={{ width: "300px", minHeight: "450px" }}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            R
+            {hotel.name[0].toUpperCase()}
           </Avatar>
-        }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
         }
         title={hotel.name}
       />
       <CardMedia component="img" height="194" image={hotel.images[0]} />
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          category, rating and price
+        <Typography color="text.secondary">
+          category: {hotel.category}
+        </Typography>
+      </CardContent>
+      <CardContent>
+        <Typography color="text.secondary">
+          price: {formatter.format(hotel.price)}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
+        <Button
+          size="small"
+          variant="contained"
+          onClick={handleAddComment}
+          disabled={isComment.state}
+        >
+          Agregar Comentario
+        </Button>
         {hasComment && (
           <ExpandMore
             expand={expanded}
@@ -70,18 +113,76 @@ export default function Card({ hotel }) {
           </ExpandMore>
         )}
       </CardActions>
-      {hasComment && (
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <CardContent>
-            <Typography paragraph>comment: </Typography>
-            <Typography paragraph>rating: </Typography>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        {isComment.state && (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              padding: "10px",
+            }}
+          >
+            <form onSubmit={handleSubmit}>
+              <TextField
+                fullWidth
+                id="comment"
+                label="comment"
+                multiline
+                maxRows={3}
+                value={isComment.comment}
+                onChange={handleFormComments}
+              />
+              <TextField
+                fullWidth
+                sx={{ marginTop: "10px" }}
+                id="user"
+                label="user"
+                value={isComment.user}
+                onChange={(e) => {
+                  setIsComment((prev) => ({
+                    ...prev,
+                    user: e.target.value,
+                  }));
+                }}
+              />
+              <div>
+                <Typography component="legend">Rating</Typography>
+                <Rating
+                  name="rating"
+                  value={isComment.rating}
+                  onChange={(event, newValue) => {
+                    setIsComment((prev) => ({ ...prev, rating: newValue }));
+                  }}
+                />
+              </div>
+              <Button variant="contained" type="submit">
+                enviar
+              </Button>
+              <Button
+                variant="contained"
+                type="button"
+                onClick={() => {
+                  handleExpandClick();
+                  setIsComment((prev) => ({ ...prev, state: false }));
+                }}
+              >
+                cancelar
+              </Button>
+            </form>
+          </Box>
+        )}
+        {hotel.comments.map((comment) => (
+          <CardContent key={comment.comment} sx={{ backgroundColor: "grey" }}>
+            <Box sx={{ backgroundColor: "grey" }}>
+              <Typography paragraph>comment: {comment.comment} </Typography>
+              <div>
+                <Typography component="legend">Rating</Typography>
+                <Rating name="rating" value={comment.rating} readOnly />
+              </div>
+            </Box>
           </CardContent>
-          <CardContent>
-            <Typography paragraph>comment: </Typography>
-            <Typography paragraph>rating: </Typography>
-          </CardContent>
-        </Collapse>
-      )}
+        ))}
+      </Collapse>
     </CardContainer>
   );
 }

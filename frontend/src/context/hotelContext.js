@@ -8,7 +8,7 @@ const HotelContextProvider = ({ children }) => {
     hotels: [],
     category: "",
     rating: null,
-    priceOrderBy: "",
+    priceOrderBy: "asc",
   };
   const actionMap = {
     hotels: (state, action) => ({ ...state, hotels: action.payload }),
@@ -26,6 +26,7 @@ const HotelContextProvider = ({ children }) => {
 
   const hotelSlice = useReducer(hotelReducer, initialState);
   const [state, dispatch] = hotelSlice;
+  const { priceOrderBy, rating, category } = state;
 
   useEffect(() => {
     hotelServices
@@ -34,7 +35,7 @@ const HotelContextProvider = ({ children }) => {
         dispatch({ type: "hotels", payload: data });
       })
       .catch((e) => console.log(e));
-  }, []);
+  }, [priceOrderBy, rating, category]);
 
   return (
     <HotelContext.Provider value={hotelSlice}>{children}</HotelContext.Provider>

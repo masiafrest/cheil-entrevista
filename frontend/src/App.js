@@ -1,5 +1,6 @@
 import { HotelContextProvider } from "./context/hotelContext";
 import Cards from "./components/Cards";
+import FilterBar from "./components/FilterBar";
 import { Container } from "@mui/material";
 
 function App() {
@@ -7,7 +8,8 @@ function App() {
   return (
     <>
       <HotelContextProvider>
-        <Container>
+        <FilterBar />
+        <Container sx={{ marginTop: "20px" }}>
           <Cards />
         </Container>
       </HotelContextProvider>
