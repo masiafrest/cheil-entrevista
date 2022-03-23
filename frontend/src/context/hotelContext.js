@@ -9,8 +9,11 @@ const HotelContextProvider = ({ children }) => {
     category: "",
     rating: null,
     priceOrderBy: "asc",
+    changes: 0,
   };
+
   const actionMap = {
+    changes: (state, action) => ({ ...state, changes: action.payload }),
     hotels: (state, action) => ({ ...state, hotels: action.payload }),
     category: (state, action) => ({ ...state, category: action.payload }),
     rating: (state, action) => ({ ...state, rating: action.payload }),
@@ -35,7 +38,7 @@ const HotelContextProvider = ({ children }) => {
         dispatch({ type: "hotels", payload: data });
       })
       .catch((e) => console.log(e));
-  }, [priceOrderBy, rating, category]);
+  }, [priceOrderBy, rating, category, state.changes]);
 
   return (
     <HotelContext.Provider value={hotelSlice}>{children}</HotelContext.Provider>

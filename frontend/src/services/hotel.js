@@ -18,7 +18,13 @@ const postComment = async (id, commentObj) => {
   return res.data;
 };
 
+const postHotel = async (newHotel) => {
+  const res = await axios.post(baseUrl, newHotel);
+  return res.data;
+};
+
 export default {
   getAll,
   postComment,
+  postHotel,
 };

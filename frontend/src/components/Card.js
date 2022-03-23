@@ -22,6 +22,7 @@ import {
 } from "@mui/icons-material";
 
 import hotelService from "../services/hotel";
+import useHotelContext from "../utils/useHotelContext";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -40,6 +41,8 @@ const formatter = new Intl.NumberFormat("en-US", {
 });
 
 export default function Card({ hotel }) {
+  const [state, dispatch] = useHotelContext();
+
   const [expanded, setExpanded] = React.useState(false);
   const [isComment, setIsComment] = React.useState({
     state: false,
@@ -71,6 +74,7 @@ export default function Card({ hotel }) {
     hotelService.postComment(hotel.id, { comment, rating, user });
     handleExpandClick();
     setIsComment((prev) => ({ ...prev, state: false }));
+    dispatch({ type: "changes", payload: state.changes + 1 });
   };
   return (
     <CardContainer sx={{ width: "300px", minHeight: "450px" }}>
